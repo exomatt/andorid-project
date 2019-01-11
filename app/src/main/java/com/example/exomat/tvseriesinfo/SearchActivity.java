@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -38,17 +40,37 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
         final EditText searchText = findViewById(R.id.searchText);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                confirmHandler(searchText, context);
+            }
+        });
         final ImageButton searchButton = findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String search = searchText.getText().toString();
-                if (search.isEmpty()) {
-                    return;
-                }
-                SearchRequester.searchRequest(search, listView, context);
+                confirmHandler(searchText, context);
 
             }
         });
+    }
+
+    private void confirmHandler(EditText searchText, Context context) {
+        String search = searchText.getText().toString();
+        if (search.isEmpty()) {
+            return;
+        }
+        SearchRequester.searchRequest(search, listView, context);
     }
 }

@@ -38,9 +38,9 @@ public class SearchRequester {
                 Log.e("TAGRESPONSE", response.message());
                 Log.e("TAGRESPONSE", response.toString());
                 for (TvShowResult tvShowResult : response.body()) {
-                    Log.e("tag", tvShowResult.getShow().getName().toString());
+                    Log.e("tag", tvShowResult.getShow().getName());
                 }
-                Log.e("TAGRESPONSE", response.body().get(0).getShow().toString());
+//                Log.e("TAGRESPONSE", response.body().get(0).getShow().toString());
             }
 
             @Override
