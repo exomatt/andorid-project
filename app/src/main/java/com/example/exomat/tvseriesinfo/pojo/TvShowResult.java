@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class TvShowResult {
+import java.io.Serializable;
+
+public class TvShowResult implements Serializable {
 
     @SerializedName("score")
     @Expose

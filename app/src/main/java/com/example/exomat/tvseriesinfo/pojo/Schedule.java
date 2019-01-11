@@ -6,9 +6,10 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Schedule {
+public class Schedule implements Serializable {
 
     @SerializedName("time")
     @Expose

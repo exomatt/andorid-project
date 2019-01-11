@@ -6,9 +6,10 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Show {
+public class Show implements Serializable {
 
     @SerializedName("id")
     @Expose

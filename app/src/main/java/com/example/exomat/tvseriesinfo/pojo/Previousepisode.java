@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Previousepisode {
+import java.io.Serializable;
+
+public class Previousepisode implements Serializable {
 
     @SerializedName("href")
     @Expose

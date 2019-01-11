@@ -6,13 +6,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
+
 import java.util.List;
 
 public class ListSearchAdapter extends BaseAdapter {
-    private List<TVShow> tvShows;
+    private List<TvShowResult> tvShows;
     private Context context;
 
-    public ListSearchAdapter(List<TVShow> tvShows, Context context) {
+    public ListSearchAdapter(List<TvShowResult> tvShows, Context context) {
         this.tvShows = tvShows;
         this.context = context;
     }
@@ -37,9 +39,9 @@ public class ListSearchAdapter extends BaseAdapter {
         View view = View.inflate(context, R.layout.list_item, null);
         TextView name = view.findViewById(R.id.nameText);
         TextView year = view.findViewById(R.id.yearText);
-        TVShow tvShow = tvShows.get(position);
-        name.setText(tvShow.getName());
-        year.setText(tvShow.getYear());
+        TvShowResult tvShowResult = tvShows.get(position);
+        name.setText(tvShowResult.getShow().getName());
+        year.setText(tvShowResult.getShow().getPremiered());
         return view;
     }
 }

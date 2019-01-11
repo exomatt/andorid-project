@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Image {
+import java.io.Serializable;
+
+public class Image implements Serializable {
 
     @SerializedName("medium")
     @Expose
