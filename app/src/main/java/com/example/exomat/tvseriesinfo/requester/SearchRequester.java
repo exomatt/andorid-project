@@ -37,16 +37,10 @@ public class SearchRequester {
                 listView.setAdapter(new ListSearchAdapter(response.body(), context));
                 Log.e("TAGRESPONSE", response.message());
                 Log.e("TAGRESPONSE", response.toString());
-//                try {
-//                    Log.e("TAGRESPONSEcos", String.valueOf(response.body().string()));
-//                List<TvShowResult> tvShowResults = new Gson().fromJson(response.body().string(),new TypeToken<List<TvShowResult>>(){}.getType());
                 for (TvShowResult tvShowResult : response.body()) {
                     Log.e("tag", tvShowResult.getShow().getName().toString());
                 }
-                Log.e("TAGRESPONSEcso", response.body().get(0).getShow().toString());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+                Log.e("TAGRESPONSE", response.body().get(0).getShow().toString());
             }
 
             @Override
