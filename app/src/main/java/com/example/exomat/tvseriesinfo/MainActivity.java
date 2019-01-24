@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        CardView favoriteCard = findViewById(R.id.favoriteCard);
+
     }
 
 }
