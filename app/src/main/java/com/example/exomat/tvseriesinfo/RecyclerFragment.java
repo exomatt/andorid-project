@@ -37,9 +37,8 @@ public class RecyclerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_recycler_fragment, container, false);
         list = new ArrayList<>();
-        AppDatabase appDatabase = Room.databaseBuilder(getContext(), AppDatabase.class, "database-tvshow").build();
-        final TVShowDao tvShowDao = appDatabase.tvShowDao();
-        initializeList(tvShowDao);
+
+        initializeList();
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new RecyclerViewAdapter(list));
@@ -47,20 +46,31 @@ public class RecyclerFragment extends Fragment {
         return view;
     }
 
-    private void initializeList(final TVShowDao tvShowDao) {
+    private void initializeList() {
 
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                AppDatabase appDatabase = Room.databaseBuilder(getContext(), AppDatabase.class, "database-tvshow").build();
+                final TVShowDao tvShowDao = appDatabase.tvShowDao();
                 list = tvShowDao.getAll();
+                if (list == null || list.isEmpty()) {
+                    return;
+                }
                 Log.i("TVINFO", "w bazie " + list.get(0).toString());
+                Log.d("test", "size of list: " + list.size());
+                appDatabase.close();
+                recyclerView.setAdapter(new RecyclerViewAdapter(list));
             }
         });
     }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private CardView mCardView;
-        private TextView mTextView;
+        private TextView mTextViewName;
+        private TextView mTextViewDate;
+        private TextView mTextViewStatus;
+        private TextView mTextViewEpisode;
         private ImageView mImageView;
         private Button mButton;
 
@@ -71,10 +81,12 @@ public class RecyclerFragment extends Fragment {
         public RecyclerViewHolder(LayoutInflater inflater, ViewGroup conatainer) {
             super(inflater.inflate(R.layout.card_view, conatainer, false));
 
-//            mButton = itemView.findViewById(R.id.button);
             mCardView = itemView.findViewById(R.id.card_container);
-//            mTextView = itemView.findViewById(R.id.text_holder);
-//            mImageView = itemView.findViewById(R.id.image_holder);
+            mTextViewName = itemView.findViewById(R.id.textCardName);
+            mTextViewDate = itemView.findViewById(R.id.textCardDate);
+            mTextViewStatus = itemView.findViewById(R.id.textCardStatus);
+            mTextViewEpisode = itemView.findViewById(R.id.textCardEpisode);
+            mImageView = itemView.findViewById(R.id.imageViewCard);
 //            mCardView.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
@@ -104,7 +116,13 @@ public class RecyclerFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerViewHolder recyclerViewHolder, int i) {
-            recyclerViewHolder.mTextView.setText(mList.get(i).getName());
+            recyclerViewHolder.mTextViewName.setText(list.get(i).getName());
+            recyclerViewHolder.mTextViewDate.setText(list.get(i).getPremiere());
+            recyclerViewHolder.mTextViewStatus.setText(list.get(i).getStatus());
+            String nextEpisode = list.get(i).getNextEpisode();
+            if (nextEpisode != null) {
+                recyclerViewHolder.mTextViewEpisode.setText(nextEpisode);
+            }
 //            recyclerViewHolder.mImageView.setImageDrawable(getResources().getDrawable(mList.get(i).));
         }
 

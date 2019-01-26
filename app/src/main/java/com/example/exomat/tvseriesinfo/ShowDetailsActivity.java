@@ -1,6 +1,7 @@
 package com.example.exomat.tvseriesinfo;
 
 import android.arch.persistence.room.Room;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.example.exomat.tvseriesinfo.model.TVShow;
 import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ShowDetailsActivity extends AppCompatActivity {
@@ -59,7 +61,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
-                            tvShowDao.insert(tvShowToSave);
+                            tvShowToSave.setId(tvShowDao.insert(tvShowToSave));
                         }
                     });
                     Toast.makeText(ShowDetailsActivity.this, "Tv Series add to favorite :)", Toast.LENGTH_SHORT).show();
@@ -92,7 +94,17 @@ public class ShowDetailsActivity extends AppCompatActivity {
         tvShow.setPremiere(showResult.getShow().getPremiered());
         tvShow.setSummary(showResult.getShow().getSummary());
         tvShow.setSelfLink(String.valueOf(showResult.getShow().getLinks().getSelf()));
+        tvShow.setImgLink(showResult.getShow().getImage().getOriginal());
+        try {
+            Bitmap bitmap = Picasso.with(getApplicationContext()).load(showResult.getShow().getImage().getOriginal()).get();
+
+            // save to db
+        } catch (IOException e) {
+            Log.e("SDetActiv", "getNewTVShow: ", e);
+        }
         //todo async get previous and next episode
+
+
         return tvShow;
     }
 }

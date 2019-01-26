@@ -21,5 +21,6 @@ public class TVShow {
     private String nextEpisode;
     private String previousEpisode;
     private String selfLink;
-
+    private String imgLink;
+    private byte[] imageByteArray;
 }

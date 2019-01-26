@@ -26,4 +26,7 @@ public interface TVShowDao {
 
     @Query("Select * from tvshow")
     List<TVShow> getAll();
+
+    @Query("Select * from tvshow where name = :n")
+    TVShow findByName(String n);
 }

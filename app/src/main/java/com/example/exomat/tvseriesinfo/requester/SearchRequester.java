@@ -1,6 +1,8 @@
 package com.example.exomat.tvseriesinfo.requester;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -45,6 +47,13 @@ public class SearchRequester {
 
             @Override
             public void onFailure(Call<List<TvShowResult>> call, Throwable t) {
+                ConnectivityManager connectivityManager
+                        = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                    Toast.makeText(context, "Probably you don't connect to the Net :(  :(", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Log.e("Error tag", "failure " + t.toString());
                 Toast.makeText(context, "Some problem with search that TV SHOW :(", Toast.LENGTH_SHORT).show();
             }
@@ -53,6 +62,9 @@ public class SearchRequester {
 
     }
 
+    public static void downloadImage() {
+
+    }
     private interface Service {
         @GET("search/shows")
         Call<List<TvShowResult>> searchTVShow(@Query("q") String query);
