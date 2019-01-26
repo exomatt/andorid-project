@@ -24,10 +24,10 @@ import com.example.exomat.tvseriesinfo.model.TVShow;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerFragment extends Fragment {
+public class RecyclerFragment extends Fragment implements AsyncResponse {
     List<TVShow> list;
     RecyclerView recyclerView;
-
+    RecyclerViewAdapter adapter;
     public static Fragment newInstance() {
         return new RecyclerFragment();
     }
@@ -37,32 +37,38 @@ public class RecyclerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_recycler_fragment, container, false);
         list = new ArrayList<>();
-
         initializeList();
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new RecyclerViewAdapter(list));
+        adapter = new RecyclerViewAdapter(list);
+        recyclerView.setAdapter(adapter);
+
 
         return view;
     }
 
     private void initializeList() {
+        new MyAsyncTask().execute();
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                AppDatabase appDatabase = Room.databaseBuilder(getContext(), AppDatabase.class, "database-tvshow").build();
+//                final TVShowDao tvShowDao = appDatabase.tvShowDao();
+//                list.addAll(tvShowDao.getAll());
+//                if (list == null || list.isEmpty()) {
+//                    return;
+//                }
+//                Log.i("TVINFO", "w bazie " + list.get(0).toString());
+//                Log.d("test", "size of list: " + list.size());
+//                appDatabase.close();
+//                recyclerView.setAdapter(new RecyclerViewAdapter(list));
+//            }
+//        });
+    }
 
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                AppDatabase appDatabase = Room.databaseBuilder(getContext(), AppDatabase.class, "database-tvshow").build();
-                final TVShowDao tvShowDao = appDatabase.tvShowDao();
-                list = tvShowDao.getAll();
-                if (list == null || list.isEmpty()) {
-                    return;
-                }
-                Log.i("TVINFO", "w bazie " + list.get(0).toString());
-                Log.d("test", "size of list: " + list.size());
-                appDatabase.close();
-                recyclerView.setAdapter(new RecyclerViewAdapter(list));
-            }
-        });
+    @Override
+    public void processFinish(String output) {
+
     }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -116,12 +122,17 @@ public class RecyclerFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerViewHolder recyclerViewHolder, int i) {
-            recyclerViewHolder.mTextViewName.setText(list.get(i).getName());
-            recyclerViewHolder.mTextViewDate.setText(list.get(i).getPremiere());
-            recyclerViewHolder.mTextViewStatus.setText(list.get(i).getStatus());
-            String nextEpisode = list.get(i).getNextEpisode();
+            TVShow tvShow = list.get(i);
+            recyclerViewHolder.mTextViewName.setText(tvShow.getName());
+            recyclerViewHolder.mTextViewDate.setText(tvShow.getPremiere());
+            recyclerViewHolder.mTextViewStatus.setText(tvShow.getStatus());
+            String nextEpisode = tvShow.getNextEpisode();
             if (nextEpisode != null) {
                 recyclerViewHolder.mTextViewEpisode.setText(nextEpisode);
+            }
+            if (tvShow.getImageByteArray() != null) {
+//                Picasso.with(getContext()).
+                recyclerViewHolder.mImageView.setImageBitmap(ImageUtils.getImage(tvShow.getImageByteArray()));
             }
 //            recyclerViewHolder.mImageView.setImageDrawable(getResources().getDrawable(mList.get(i).));
         }
@@ -132,5 +143,28 @@ public class RecyclerFragment extends Fragment {
             return mList.size();
         }
 
+    }
+
+    public class MyAsyncTask extends AsyncTask<Void, Void, String> {
+        public AsyncResponse delegate = null;
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            AppDatabase appDatabase = Room.databaseBuilder(getContext(), AppDatabase.class, "database-tvshow").build();
+            final TVShowDao tvShowDao = appDatabase.tvShowDao();
+            list.addAll(tvShowDao.getAll());
+            if (list == null || list.isEmpty()) {
+                return null;
+            }
+            Log.i("TVINFO", "w bazie " + list.get(0).toString());
+            Log.d("test", "size of list: " + list.size());
+            appDatabase.close();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            recyclerView.setAdapter(new RecyclerViewAdapter(list));
+        }
     }
 }

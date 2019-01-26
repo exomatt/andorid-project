@@ -20,17 +20,16 @@ import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ShowDetailsActivity extends AppCompatActivity {
     private boolean ifFavorite = false;
     private TVShow tvShowToSave = null;
-
+    private TVShowDao tvShowDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppDatabase appDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-tvshow").build();
-        final TVShowDao tvShowDao = appDatabase.tvShowDao();
+        tvShowDao = appDatabase.tvShowDao();
         setContentView(R.layout.activity_show_details);
         final TvShowResult show = (TvShowResult) getIntent().getSerializableExtra("Show");
         Log.i("SDAI", "TVShow to display: " + show.toString());
@@ -40,7 +39,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
         TextView summary = findViewById(R.id.showSummaryText);
         ImageView image = findViewById(R.id.imageTVView);
         String originalImagePath = show.getShow().getImage().getOriginal();
-
+        //todo ladowanie przed i sprawdzenie czy przypadkiem nie jest juz likeniety xd
         if (!originalImagePath.isEmpty())
             Picasso.with(getApplicationContext()).load(originalImagePath).into(image);
         name.setText(show.getShow().getName());
@@ -61,19 +60,14 @@ public class ShowDetailsActivity extends AppCompatActivity {
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
-                            tvShowToSave.setId(tvShowDao.insert(tvShowToSave));
+                            Long insert = tvShowDao.insert(tvShowToSave);
+                            tvShowToSave.setId(insert);
+                            getImageToDB(tvShowToSave);
                         }
                     });
                     Toast.makeText(ShowDetailsActivity.this, "Tv Series add to favorite :)", Toast.LENGTH_SHORT).show();
                 } else {
                     ifFavorite = false;
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            List<TVShow> all = tvShowDao.getAll();
-                            Log.i("TVINFO", "w bazie " + all.get(0).toString());
-                        }
-                    });
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -95,16 +89,25 @@ public class ShowDetailsActivity extends AppCompatActivity {
         tvShow.setSummary(showResult.getShow().getSummary());
         tvShow.setSelfLink(String.valueOf(showResult.getShow().getLinks().getSelf()));
         tvShow.setImgLink(showResult.getShow().getImage().getOriginal());
-        try {
-            Bitmap bitmap = Picasso.with(getApplicationContext()).load(showResult.getShow().getImage().getOriginal()).get();
 
-            // save to db
-        } catch (IOException e) {
-            Log.e("SDetActiv", "getNewTVShow: ", e);
-        }
         //todo async get previous and next episode
 
 
         return tvShow;
     }
+
+    private void getImageToDB(TVShow tvShow) {
+        try {
+            Bitmap bitmap = Picasso.with(getApplicationContext()).load(tvShow.getImgLink()).get();
+            byte[] bytes = ImageUtils.getBytes(bitmap);
+            tvShow.setImageByteArray(bytes);
+            tvShowDao.update(tvShow);
+            //todo save to db
+        } catch (IOException e) {
+            Log.e("SDetActiv", "getNewTVShow: ", e);
+        }
+    }
+
+
+
 }
