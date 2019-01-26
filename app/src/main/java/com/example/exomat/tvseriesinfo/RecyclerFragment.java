@@ -1,5 +1,7 @@
 package com.example.exomat.tvseriesinfo;
 
+import android.arch.persistence.room.Room;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.exomat.tvseriesinfo.dao.TVShowDao;
+import com.example.exomat.tvseriesinfo.database.AppDatabase;
 import com.example.exomat.tvseriesinfo.model.TVShow;
 
 import java.util.ArrayList;
@@ -32,7 +37,9 @@ public class RecyclerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_recycler_fragment, container, false);
         list = new ArrayList<>();
-        initalizeList();
+        AppDatabase appDatabase = Room.databaseBuilder(getContext(), AppDatabase.class, "database-tvshow").build();
+        final TVShowDao tvShowDao = appDatabase.tvShowDao();
+        initializeList(tvShowDao);
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(new RecyclerViewAdapter(list));
@@ -40,8 +47,15 @@ public class RecyclerFragment extends Fragment {
         return view;
     }
 
-    private void initalizeList() {
+    private void initializeList(final TVShowDao tvShowDao) {
 
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                list = tvShowDao.getAll();
+                Log.i("TVINFO", "w bazie " + list.get(0).toString());
+            }
+        });
     }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
