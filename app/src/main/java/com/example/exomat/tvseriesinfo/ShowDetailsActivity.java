@@ -135,8 +135,12 @@ public class ShowDetailsActivity extends AppCompatActivity {
             }
             Log.i("SDAI", "TVShow to display: " + tvShowToSave.toString());
             String originalImagePath = tvShowToSave.getImgLink();
-            if (!originalImagePath.isEmpty()) {
-                Picasso.with(getApplicationContext()).load(originalImagePath).into(image);
+            if (tvShowToSave.getImageByteArray() != null) {
+                image.setImageBitmap(ImageUtils.getImage(tvShowToSave.getImageByteArray()));
+            } else {
+                if (!originalImagePath.isEmpty()) {
+                    Picasso.with(getApplicationContext()).load(originalImagePath).into(image);
+                }
             }
             name.setText(tvShowToSave.getName());
             premiere.setText(tvShowToSave.getPremiere());
