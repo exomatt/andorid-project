@@ -1,6 +1,7 @@
 package com.example.exomat.tvseriesinfo;
 
 import android.arch.persistence.room.Room;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +28,7 @@ public class RecyclerFragment extends Fragment implements AsyncResponse {
     List<TVShow> list;
     RecyclerView recyclerView;
     RecyclerViewAdapter adapter;
+
     public static Fragment newInstance() {
         return new RecyclerFragment();
     }
@@ -43,27 +44,11 @@ public class RecyclerFragment extends Fragment implements AsyncResponse {
         adapter = new RecyclerViewAdapter(list);
         recyclerView.setAdapter(adapter);
 
-
         return view;
     }
 
     private void initializeList() {
         new MyAsyncTask().execute();
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                AppDatabase appDatabase = Room.databaseBuilder(getContext(), AppDatabase.class, "database-tvshow").build();
-//                final TVShowDao tvShowDao = appDatabase.tvShowDao();
-//                list.addAll(tvShowDao.getAll());
-//                if (list == null || list.isEmpty()) {
-//                    return;
-//                }
-//                Log.i("TVINFO", "w bazie " + list.get(0).toString());
-//                Log.d("test", "size of list: " + list.size());
-//                appDatabase.close();
-//                recyclerView.setAdapter(new RecyclerViewAdapter(list));
-//            }
-//        });
     }
 
     @Override
@@ -78,7 +63,6 @@ public class RecyclerFragment extends Fragment implements AsyncResponse {
         private TextView mTextViewStatus;
         private TextView mTextViewEpisode;
         private ImageView mImageView;
-        private Button mButton;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,15 +77,7 @@ public class RecyclerFragment extends Fragment implements AsyncResponse {
             mTextViewStatus = itemView.findViewById(R.id.textCardStatus);
             mTextViewEpisode = itemView.findViewById(R.id.textCardEpisode);
             mImageView = itemView.findViewById(R.id.imageViewCard);
-//            mCardView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    mCardView.setSelected(false);
-//                    mCardView.setAlpha((float) 1.0);
-//                    if(selected>0)
-//                        selected--;
-//                }
-//            });
+
         }
     }
 
@@ -117,15 +93,33 @@ public class RecyclerFragment extends Fragment implements AsyncResponse {
         public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
 
+            //            viewGroup.setOnClickListener(new View.OnClickListener() {
+
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(getContext(), ShowDetailsActivity.class);
+//                    intent.putExtra("Show", currentItem);
+//                    startActivity(intent);
+//                }
+//            });
             return new RecyclerViewHolder(inflater, viewGroup);
         }
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerViewHolder recyclerViewHolder, int i) {
-            TVShow tvShow = list.get(i);
+            final TVShow tvShow = list.get(i);
             recyclerViewHolder.mTextViewName.setText(tvShow.getName());
             recyclerViewHolder.mTextViewDate.setText(tvShow.getPremiere());
             recyclerViewHolder.mTextViewStatus.setText(tvShow.getStatus());
+            final String name = tvShow.getName();
+            recyclerViewHolder.mCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), ShowDetailsActivity.class);
+                    intent.putExtra("ShowName", name);
+                    getActivity().startActivity(intent);
+                }
+            });
             String nextEpisode = tvShow.getNextEpisode();
             if (nextEpisode != null) {
                 recyclerViewHolder.mTextViewEpisode.setText(nextEpisode);
@@ -143,6 +137,12 @@ public class RecyclerFragment extends Fragment implements AsyncResponse {
             return mList.size();
         }
 
+    }
+
+    private void onCardClickMethod(TVShow tvShow) {
+        Intent intent = new Intent(getContext(), ShowDetailsActivity.class);
+        intent.putExtra("Show", tvShow);
+        startActivity(intent);
     }
 
     public class MyAsyncTask extends AsyncTask<Void, Void, String> {
@@ -164,7 +164,8 @@ public class RecyclerFragment extends Fragment implements AsyncResponse {
 
         @Override
         protected void onPostExecute(String result) {
-            recyclerView.setAdapter(new RecyclerViewAdapter(list));
+            adapter = new RecyclerViewAdapter(list);
+            recyclerView.setAdapter(adapter);
         }
     }
 }

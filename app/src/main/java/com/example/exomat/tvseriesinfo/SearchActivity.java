@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.example.exomat.tvseriesinfo.model.TVShow;
 import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
 import com.example.exomat.tvseriesinfo.requester.SearchRequester;
 
@@ -34,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TvShowResult itemAtPosition = (TvShowResult) listView.getItemAtPosition(position);
                 Intent intent = new Intent(getBaseContext(), ShowDetailsActivity.class);
-                intent.putExtra("Show", itemAtPosition);
+                intent.putExtra("Show", getNewTVShow(itemAtPosition));
                 startActivity(intent);
 
             }
@@ -72,5 +73,20 @@ public class SearchActivity extends AppCompatActivity {
             return;
         }
         SearchRequester.searchRequest(search, listView, context);
+    }
+
+    private TVShow getNewTVShow(TvShowResult showResult) {
+        TVShow tvShow = new TVShow();
+        tvShow.setName(showResult.getShow().getName());
+        tvShow.setStatus(showResult.getShow().getStatus());
+        tvShow.setPremiere(showResult.getShow().getPremiered());
+        tvShow.setSummary(showResult.getShow().getSummary());
+        tvShow.setSelfLink(String.valueOf(showResult.getShow().getLinks().getSelf()));
+        tvShow.setImgLink(showResult.getShow().getImage().getOriginal());
+
+        //todo async get previous and next episode
+
+
+        return tvShow;
     }
 }

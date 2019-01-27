@@ -25,60 +25,61 @@ public class ShowDetailsActivity extends AppCompatActivity {
     private boolean ifFavorite = false;
     private TVShow tvShowToSave = null;
     private TVShowDao tvShowDao;
+    private String tvShowName;
+    private TextView name;
+    private TextView premiere;
+    private TextView status;
+    private TextView summary;
+    private ImageView image;
+    private ImageButton favoriteButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppDatabase appDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-tvshow").build();
         tvShowDao = appDatabase.tvShowDao();
         setContentView(R.layout.activity_show_details);
-        final TvShowResult show = (TvShowResult) getIntent().getSerializableExtra("Show");
-        Log.i("SDAI", "TVShow to display: " + show.toString());
-        TextView name = findViewById(R.id.tvShowNameText);
-        TextView premiere = findViewById(R.id.premiereText);
-        TextView status = findViewById(R.id.statusText);
-        TextView summary = findViewById(R.id.showSummaryText);
-        ImageView image = findViewById(R.id.imageTVView);
-        String originalImagePath = show.getShow().getImage().getOriginal();
+        name = findViewById(R.id.tvShowNameText);
+        premiere = findViewById(R.id.premiereText);
+        status = findViewById(R.id.statusText);
+        summary = findViewById(R.id.showSummaryText);
+        image = findViewById(R.id.imageTVView);
+        favoriteButton = findViewById(R.id.favoriteButton);
+        tvShowToSave = (TVShow) getIntent().getSerializableExtra("Show");
+        tvShowName = getIntent().getStringExtra("ShowName");
+//        tvShowToSave = getNewTVShow(show);
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                TVShow byName;
+//                if (tvShowToSave==null){
+//                    byName = tvShowDao.findByName(tvShowName);
+//                }else{
+//                    byName = tvShowDao.findByName(tvShowToSave.getName());
+//                }
+//                if (byName!=null){
+//                    tvShowToSave = byName;
+//                }
+//            }
+//        });
         //todo ladowanie przed i sprawdzenie czy przypadkiem nie jest juz likeniety xd
-        if (!originalImagePath.isEmpty())
-            Picasso.with(getApplicationContext()).load(originalImagePath).into(image);
-        name.setText(show.getShow().getName());
-        premiere.setText(show.getShow().getPremiered());
-        status.setText(show.getShow().getStatus());
-        summary.setText(show.getShow().getSummary().replaceAll("(<[^>]+>)", ""));
+//        System.out.println(tvShowToSave);
+//        System.out.println(tvShowToSave);
+//        if (tvShowToSave.getId() == null) {
+//            ifFavorite = true;
+//            favoriteButton.setBackgroundResource(R.drawable.likefull);
+//        }
+//        Log.i("SDAI", "TVShow to display: " + tvShowToSave.toString());
+//        String originalImagePath = tvShowToSave.getImgLink();
+//        if (!originalImagePath.isEmpty()) {
+//            Picasso.with(getApplicationContext()).load(originalImagePath).into(image);
+//        }
+//        name.setText(tvShowToSave.getName());
+//        premiere.setText(tvShowToSave.getPremiere());
+//        status.setText(tvShowToSave.getStatus());
+//        summary.setText(tvShowToSave.getSummary().replaceAll("(<[^>]+>)", ""));
         summary.setMovementMethod(new ScrollingMovementMethod());
-        final ImageButton favoriteButton = findViewById(R.id.favoriteButton);
-        favoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!ifFavorite) {
-                    ifFavorite = true;
-                    favoriteButton.setBackgroundResource(R.drawable.likefull);
-                    if (tvShowToSave == null) {
-                        tvShowToSave = getNewTVShow(show);
-                    }
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            Long insert = tvShowDao.insert(tvShowToSave);
-                            tvShowToSave.setId(insert);
-                            getImageToDB(tvShowToSave);
-                        }
-                    });
-                    Toast.makeText(ShowDetailsActivity.this, "Tv Series add to favorite :)", Toast.LENGTH_SHORT).show();
-                } else {
-                    ifFavorite = false;
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            tvShowDao.delete(tvShowToSave);
-                        }
-                    });
-                    favoriteButton.setBackgroundResource(R.drawable.likeempty);
-                    Toast.makeText(ShowDetailsActivity.this, "Tv Series remove from favorite :)", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        new MyAsyncLoadData().execute();
     }
 
     private TVShow getNewTVShow(TvShowResult showResult) {
@@ -108,6 +109,70 @@ public class ShowDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public class MyAsyncLoadData extends AsyncTask<Void, Void, String> {
+        public AsyncResponse delegate = null;
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            TVShow byName;
+            if (tvShowToSave == null) {
+                byName = tvShowDao.findByName(tvShowName);
+            } else {
+                byName = tvShowDao.findByName(tvShowToSave.getName());
+            }
+            if (byName != null) {
+                tvShowToSave = byName;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (tvShowToSave.getId() != null) {
+                ifFavorite = true;
+                favoriteButton.setBackgroundResource(R.drawable.likefull);
+            }
+            Log.i("SDAI", "TVShow to display: " + tvShowToSave.toString());
+            String originalImagePath = tvShowToSave.getImgLink();
+            if (!originalImagePath.isEmpty()) {
+                Picasso.with(getApplicationContext()).load(originalImagePath).into(image);
+            }
+            name.setText(tvShowToSave.getName());
+            premiere.setText(tvShowToSave.getPremiere());
+            status.setText(tvShowToSave.getStatus());
+            summary.setText(tvShowToSave.getSummary().replaceAll("(<[^>]+>)", ""));
+            summary.setMovementMethod(new ScrollingMovementMethod());
+            favoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!ifFavorite) {
+                        ifFavorite = true;
+                        favoriteButton.setBackgroundResource(R.drawable.likefull);
+                        AsyncTask.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                Long insert = tvShowDao.insert(tvShowToSave);
+                                tvShowToSave.setId(insert);
+                                getImageToDB(tvShowToSave);
+                            }
+                        });
+                        Toast.makeText(ShowDetailsActivity.this, "Tv Series add to favorite :)", Toast.LENGTH_SHORT).show();
+                    } else {
+                        ifFavorite = false;
+                        AsyncTask.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                tvShowDao.delete(tvShowToSave);
+                            }
+                        });
+                        favoriteButton.setBackgroundResource(R.drawable.likeempty);
+                        Toast.makeText(ShowDetailsActivity.this, "Tv Series remove from favorite :)", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
 
 
 }
