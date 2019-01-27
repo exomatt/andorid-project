@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.exomat.tvseriesinfo.dao.TVShowDao;
 import com.example.exomat.tvseriesinfo.database.AppDatabase;
@@ -27,7 +28,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteRecyclerFragment extends Fragment {
+import lombok.Setter;
+
+public class FavoriteRecyclerFragment extends Fragment implements AsyncResponse {
     List<TVShow> list;
     RecyclerView recyclerView;
     RecyclerViewAdapter adapter;
@@ -41,7 +44,9 @@ public class FavoriteRecyclerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_recycler_fragment, container, false);
         list = new ArrayList<>();
-        initializeList();
+        MyAsyncTask myAsyncTask = new MyAsyncTask();
+        myAsyncTask.setDelegate(this);
+        myAsyncTask.execute();
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new RecyclerViewAdapter(list);
@@ -50,8 +55,10 @@ public class FavoriteRecyclerFragment extends Fragment {
         return view;
     }
 
-    private void initializeList() {
-        new MyAsyncTask().execute();
+
+    @Override
+    public void processFinish(String output) {
+        Toast.makeText(getContext(), output, Toast.LENGTH_SHORT).show();
     }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -143,6 +150,7 @@ public class FavoriteRecyclerFragment extends Fragment {
         startActivity(intent);
     }
 
+    @Setter
     public class MyAsyncTask extends AsyncTask<Void, Void, String> {
         public AsyncResponse delegate = null;
 
@@ -153,7 +161,7 @@ public class FavoriteRecyclerFragment extends Fragment {
             list.addAll(tvShowDao.getAll());
             if (list == null || list.isEmpty()) {
                 appDatabase.close();
-                return null;
+                return "Ooooo empty favorites :(";
             }
             for (TVShow tvShow : list) {
                 try {
@@ -169,13 +177,14 @@ public class FavoriteRecyclerFragment extends Fragment {
             Log.i("TVINFO", "w bazie " + list.get(0).toString());
             Log.d("test", "size of list: " + list.size());
             appDatabase.close();
-            return null;
+            return "Successfully load TVShows :)";
         }
 
         @Override
         protected void onPostExecute(String result) {
             adapter = new RecyclerViewAdapter(list);
             recyclerView.setAdapter(adapter);
+            delegate.processFinish(result);
         }
     }
 }
