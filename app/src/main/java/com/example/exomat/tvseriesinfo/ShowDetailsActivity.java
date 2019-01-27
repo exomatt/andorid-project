@@ -17,6 +17,7 @@ import com.example.exomat.tvseriesinfo.dao.TVShowDao;
 import com.example.exomat.tvseriesinfo.database.AppDatabase;
 import com.example.exomat.tvseriesinfo.model.TVShow;
 import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
+import com.example.exomat.tvseriesinfo.requester.SearchRequester;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -47,37 +48,6 @@ public class ShowDetailsActivity extends AppCompatActivity {
         favoriteButton = findViewById(R.id.favoriteButton);
         tvShowToSave = (TVShow) getIntent().getSerializableExtra("Show");
         tvShowName = getIntent().getStringExtra("ShowName");
-//        tvShowToSave = getNewTVShow(show);
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                TVShow byName;
-//                if (tvShowToSave==null){
-//                    byName = tvShowDao.findByName(tvShowName);
-//                }else{
-//                    byName = tvShowDao.findByName(tvShowToSave.getName());
-//                }
-//                if (byName!=null){
-//                    tvShowToSave = byName;
-//                }
-//            }
-//        });
-        //todo ladowanie przed i sprawdzenie czy przypadkiem nie jest juz likeniety xd
-//        System.out.println(tvShowToSave);
-//        System.out.println(tvShowToSave);
-//        if (tvShowToSave.getId() == null) {
-//            ifFavorite = true;
-//            favoriteButton.setBackgroundResource(R.drawable.likefull);
-//        }
-//        Log.i("SDAI", "TVShow to display: " + tvShowToSave.toString());
-//        String originalImagePath = tvShowToSave.getImgLink();
-//        if (!originalImagePath.isEmpty()) {
-//            Picasso.with(getApplicationContext()).load(originalImagePath).into(image);
-//        }
-//        name.setText(tvShowToSave.getName());
-//        premiere.setText(tvShowToSave.getPremiere());
-//        status.setText(tvShowToSave.getStatus());
-//        summary.setText(tvShowToSave.getSummary().replaceAll("(<[^>]+>)", ""));
         summary.setMovementMethod(new ScrollingMovementMethod());
         new MyAsyncLoadData().execute();
     }
@@ -159,6 +129,13 @@ public class ShowDetailsActivity extends AppCompatActivity {
                                 Long insert = tvShowDao.insert(tvShowToSave);
                                 tvShowToSave.setId(insert);
                                 getImageToDB(tvShowToSave);
+                                if (tvShowToSave.getLastEpisodeLink() != null) {
+                                    SearchRequester.fillEpisodes(tvShowToSave.getLastEpisodeLink(), tvShowToSave, false, getApplicationContext());
+                                }
+                                if (tvShowToSave.getNextEpisodeLink() != null) {
+                                    SearchRequester.fillEpisodes(tvShowToSave.getNextEpisodeLink(), tvShowToSave, true, getApplicationContext());
+                                }
+                                //todo need to check
                             }
                         });
                         Toast.makeText(ShowDetailsActivity.this, "Tv Series add to favorite :)", Toast.LENGTH_SHORT).show();

@@ -13,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.exomat.tvseriesinfo.model.TVShow;
+import com.example.exomat.tvseriesinfo.pojo.Nextepisode;
+import com.example.exomat.tvseriesinfo.pojo.Previousepisode;
 import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
 import com.example.exomat.tvseriesinfo.requester.SearchRequester;
 
@@ -83,7 +85,16 @@ public class SearchActivity extends AppCompatActivity {
         tvShow.setSummary(showResult.getShow().getSummary());
         tvShow.setSelfLink(String.valueOf(showResult.getShow().getLinks().getSelf()));
         tvShow.setImgLink(showResult.getShow().getImage().getOriginal());
-
+        Nextepisode nextepisode = showResult.getShow().getLinks().getNextepisode();
+        if (nextepisode != null) {
+            String href = nextepisode.getHref();
+            tvShow.setNextEpisodeLink(href.substring(href.lastIndexOf("/")));
+        }
+        Previousepisode previousepisode = showResult.getShow().getLinks().getPreviousepisode();
+        if (previousepisode != null) {
+            String href = previousepisode.getHref();
+            tvShow.setLastEpisodeLink(href.substring(href.lastIndexOf("/")));
+        }
         //todo async get previous and next episode
 
 

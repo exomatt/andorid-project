@@ -20,8 +20,14 @@ public class TVShow implements Serializable {
     private String premiere;
     private String status;
     private String summary;
-    private String nextEpisode;
-    private String previousEpisode;
+    private String nextEpisodeLink;
+    private String nextEpisodeDate;
+    private String nextEpisodeName;
+    private String nextEpisodeSE;
+    private String nextEpisodeSummary;
+    private String lastEpisodeLink;
+    private String lastEpisodeDate;
+    private String lastEpisodeSE;
     private String selfLink;
     private String imgLink;
     private byte[] imageByteArray;
