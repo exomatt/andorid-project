@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RecyclerFragment"></activity>
+        <activity android:name=".EpisodeActivity"></activity>
+        <activity android:name=".TodayActivity" />
+        <activity android:name=".FavoriteRecyclerFragment" />
         <activity android:name=".FavoritesViewActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

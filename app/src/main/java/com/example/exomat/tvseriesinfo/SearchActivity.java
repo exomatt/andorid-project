@@ -84,16 +84,16 @@ public class SearchActivity extends AppCompatActivity {
         tvShow.setPremiere(showResult.getShow().getPremiered());
         tvShow.setSummary(showResult.getShow().getSummary());
         tvShow.setSelfLink(String.valueOf(showResult.getShow().getLinks().getSelf()));
-        tvShow.setImgLink(showResult.getShow().getImage().getOriginal());
+        tvShow.setImgLink(showResult.getShow().getImage().getMedium());
         Nextepisode nextepisode = showResult.getShow().getLinks().getNextepisode();
         if (nextepisode != null) {
             String href = nextepisode.getHref();
-            tvShow.setNextEpisodeLink(href.substring(href.lastIndexOf("/")));
+            tvShow.setNextEpisodeLink(href.substring(href.lastIndexOf("/") + 1));
         }
         Previousepisode previousepisode = showResult.getShow().getLinks().getPreviousepisode();
         if (previousepisode != null) {
             String href = previousepisode.getHref();
-            tvShow.setLastEpisodeLink(href.substring(href.lastIndexOf("/")));
+            tvShow.setLastEpisodeLink(href.substring(href.lastIndexOf("/") + 1));
         }
         //todo async get previous and next episode
 

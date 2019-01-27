@@ -2,11 +2,11 @@ package com.example.exomat.tvseriesinfo;
 
 import android.support.v4.app.Fragment;
 
-public class FavoritesViewActivity extends FavoriteSingleFragment {
-
+public class TodayActivity extends TodaySingleFragment {
 
     @Override
     protected Fragment createFragment() {
-        return new FavoriteRecyclerFragment().newInstance();
+        return new TodayRecyclerFragment().newInstance();
     }
+
 }

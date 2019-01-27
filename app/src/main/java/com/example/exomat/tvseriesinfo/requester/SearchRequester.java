@@ -92,8 +92,10 @@ public class SearchRequester {
                 } else {
                     tvShow.setLastEpisodeDate(airdate);
                     tvShow.setLastEpisodeSE(season);
+                    tvShow.setLastEpisodeName(name);
                 }
-                AppDatabase appDatabase = Room.databaseBuilder(context, AppDatabase.class, "database-tvshow").build();
+                AppDatabase appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "database-tvshow").allowMainThreadQueries().build();
+
                 TVShowDao tvShowDao = appDatabase.tvShowDao();
                 tvShowDao.update(tvShow);
                 appDatabase.close();

@@ -25,6 +25,7 @@ public class TVShow implements Serializable {
     private String nextEpisodeName;
     private String nextEpisodeSE;
     private String nextEpisodeSummary;
+    private String lastEpisodeName;
     private String lastEpisodeLink;
     private String lastEpisodeDate;
     private String lastEpisodeSE;

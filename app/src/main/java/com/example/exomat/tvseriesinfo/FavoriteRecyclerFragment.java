@@ -24,13 +24,13 @@ import com.example.exomat.tvseriesinfo.model.TVShow;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerFragment extends Fragment implements AsyncResponse {
+public class FavoriteRecyclerFragment extends Fragment {
     List<TVShow> list;
     RecyclerView recyclerView;
     RecyclerViewAdapter adapter;
 
     public static Fragment newInstance() {
-        return new RecyclerFragment();
+        return new FavoriteRecyclerFragment();
     }
 
     @Nullable
@@ -49,11 +49,6 @@ public class RecyclerFragment extends Fragment implements AsyncResponse {
 
     private void initializeList() {
         new MyAsyncTask().execute();
-    }
-
-    @Override
-    public void processFinish(String output) {
-
     }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -120,9 +115,9 @@ public class RecyclerFragment extends Fragment implements AsyncResponse {
                     getActivity().startActivity(intent);
                 }
             });
-            String nextEpisode = tvShow.getNextEpisode();
-            if (nextEpisode != null) {
-                recyclerViewHolder.mTextViewEpisode.setText(nextEpisode);
+            String lastEpisode = tvShow.getLastEpisodeDate();
+            if (lastEpisode != null) {
+                recyclerViewHolder.mTextViewEpisode.setText(tvShow.getLastEpisodeName() + " " + tvShow.getLastEpisodeSE() + " " + lastEpisode);
             }
             if (tvShow.getImageByteArray() != null) {
 //                Picasso.with(getContext()).

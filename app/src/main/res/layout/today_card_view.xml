@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_container"
+    android:id="@+id/today_card_container"
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:layout_margin="16dp"
@@ -13,9 +13,9 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageViewCard"
+            android:id="@+id/imageViewCardToday"
             android:layout_width="112dp"
-            android:layout_height="134dp"
+            android:layout_height="131dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="29dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -34,43 +34,32 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageViewCard"
+            app:layout_constraintStart_toEndOf="@+id/imageViewCardToday"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/textCardName"
+                android:id="@+id/textCardNameToday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/textCardDate"
+                android:id="@+id/textCardDateToday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/textView2Today"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Status"
+                android:text="Episode:"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textCardStatus"
+                android:id="@+id/textCardEpisodeToday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="LastEpisode:"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textCardEpisode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
