@@ -1,5 +1,5 @@
 
-package com.example.exomat.tvseriesinfo.pojo;
+package com.example.exomat.tvseriesinfo.pojo.pojoTVShowResult;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

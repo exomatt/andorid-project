@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
+import com.example.exomat.tvseriesinfo.pojo.pojoTVShowResult.TvShowResult;
 
 import java.util.List;
 

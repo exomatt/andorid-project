@@ -1,14 +1,12 @@
 
-package com.example.exomat.tvseriesinfo.pojo;
+package com.example.exomat.tvseriesinfo.pojo.pojoShowDetails;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.io.Serializable;
-
-public class Country implements Serializable {
+public class Country {
 
     @SerializedName("name")
     @Expose

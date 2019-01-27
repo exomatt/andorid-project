@@ -1,30 +1,28 @@
 
-package com.example.exomat.tvseriesinfo.pojo;
+package com.example.exomat.tvseriesinfo.pojo.pojoShowDetails;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.io.Serializable;
-
-public class Externals implements Serializable {
+public class Externals {
 
     @SerializedName("tvrage")
     @Expose
-    private Object tvrage;
+    private Integer tvrage;
     @SerializedName("thetvdb")
     @Expose
     private Integer thetvdb;
     @SerializedName("imdb")
     @Expose
-    private Object imdb;
+    private String imdb;
 
-    public Object getTvrage() {
+    public Integer getTvrage() {
         return tvrage;
     }
 
-    public void setTvrage(Object tvrage) {
+    public void setTvrage(Integer tvrage) {
         this.tvrage = tvrage;
     }
 
@@ -36,11 +34,11 @@ public class Externals implements Serializable {
         this.thetvdb = thetvdb;
     }
 
-    public Object getImdb() {
+    public String getImdb() {
         return imdb;
     }
 
-    public void setImdb(Object imdb) {
+    public void setImdb(String imdb) {
         this.imdb = imdb;
     }
 

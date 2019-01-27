@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.example.exomat.tvseriesinfo.dao.TVShowDao;
 import com.example.exomat.tvseriesinfo.database.AppDatabase;
 import com.example.exomat.tvseriesinfo.model.TVShow;
-import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
+import com.example.exomat.tvseriesinfo.pojo.pojoTVShowResult.TvShowResult;
 import com.example.exomat.tvseriesinfo.requester.SearchRequester;
 import com.squareup.picasso.Picasso;
 

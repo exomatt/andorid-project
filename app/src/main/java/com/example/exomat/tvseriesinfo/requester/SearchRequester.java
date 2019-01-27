@@ -12,8 +12,11 @@ import com.example.exomat.tvseriesinfo.ListSearchAdapter;
 import com.example.exomat.tvseriesinfo.dao.TVShowDao;
 import com.example.exomat.tvseriesinfo.database.AppDatabase;
 import com.example.exomat.tvseriesinfo.model.TVShow;
-import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
 import com.example.exomat.tvseriesinfo.pojo.pojoEpisode.Episode;
+import com.example.exomat.tvseriesinfo.pojo.pojoShowDetails.Nextepisode;
+import com.example.exomat.tvseriesinfo.pojo.pojoShowDetails.Previousepisode;
+import com.example.exomat.tvseriesinfo.pojo.pojoShowDetails.ShowDetails;
+import com.example.exomat.tvseriesinfo.pojo.pojoTVShowResult.TvShowResult;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +48,10 @@ public class SearchRequester {
                 listView.setAdapter(new ListSearchAdapter(response.body(), context));
                 Log.e("TAGRESPONSE", response.message());
                 Log.e("TAGRESPONSE", response.toString());
+                if (response.body() == null) {
+                    Log.e("searchRequest", "onResponse: null ");
+                    return;
+                }
                 for (TvShowResult tvShowResult : response.body()) {
                     Log.e("tag", tvShowResult.getShow().getName());
                 }
@@ -80,6 +87,10 @@ public class SearchRequester {
             public void onResponse(Call<Episode> call, Response<Episode> response) {
                 Log.i("EPFILL", String.valueOf(response.body()));
                 Episode episodeToSave = response.body();
+                if (episodeToSave == null) {
+                    Log.e("fillEpisodes", "onResponse: null ");
+                    return;
+                }
                 String airdate = episodeToSave.getAirdate();
                 String summary = episodeToSave.getSummary();
                 String season = "s" + episodeToSave.getSeason() + "e" + episodeToSave.getNumber();
@@ -103,10 +114,72 @@ public class SearchRequester {
 
             @Override
             public void onFailure(Call<Episode> call, Throwable t) {
-
+                Log.e("Error tag", "failure " + t.toString());
             }
         });
-        //todo adownaie odcinkow nowych i starych do zrobienia
+    }
+
+    public static void updateShowInDB(String number, final TVShow tvShow, final Context context) {
+        OkHttpClient client = new OkHttpClient.Builder().readTimeout(0, TimeUnit.NANOSECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS).writeTimeout(60, TimeUnit.SECONDS).build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(url).client(client)
+                .addConverterFactory(ScalarsConverterFactory.create()).addConverterFactory(GsonConverterFactory.create()).build();
+        Service service = retrofit.create(Service.class);
+        Call<ShowDetails> tvShowResultCall = service.showDetails(number);
+        tvShowResultCall.enqueue(new Callback<ShowDetails>() {
+            @Override
+            public void onResponse(Call<ShowDetails> call, Response<ShowDetails> response) {
+                ShowDetails body = response.body();
+                if (body == null) {
+                    Log.e("UpdateAll", "onResponse: null ");
+                    return;
+                }
+                TVShow newTVShow = getNewTVShow(body);
+                Log.i("UpdateAll", "onResponse: " + newTVShow);
+                newTVShow.setId(tvShow.getId());
+                newTVShow.setImageByteArray(tvShow.getImageByteArray());
+                AppDatabase appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "database-tvshow").allowMainThreadQueries().build();
+                TVShowDao tvShowDao = appDatabase.tvShowDao();
+                tvShowDao.update(newTVShow);
+                appDatabase.close();
+                if (newTVShow.getLastEpisodeLink() != null) {
+                    SearchRequester.fillEpisodes(newTVShow.getLastEpisodeLink(), newTVShow, false, context);
+                }
+                if (newTVShow.getNextEpisodeLink() != null) {
+                    SearchRequester.fillEpisodes(newTVShow.getNextEpisodeLink(), newTVShow, true, context);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ShowDetails> call, Throwable t) {
+                Log.e("Error tag", "failure " + t.toString());
+            }
+        });
+    }
+
+    private static TVShow getNewTVShow(ShowDetails showResult) {
+        TVShow tvShow = new TVShow();
+        tvShow.setName(showResult.getName());
+        tvShow.setStatus(showResult.getStatus());
+        tvShow.setPremiere(showResult.getPremiered());
+        tvShow.setSummary(showResult.getSummary());
+        tvShow.setSelfLink(String.valueOf(showResult.getLinks().getSelf().getHref()));
+        tvShow.setImgLink(showResult.getImage().getMedium());
+        Nextepisode nextepisode = showResult.getLinks().getNextepisode();
+        if (nextepisode != null) {
+            String href = nextepisode.getHref();
+            tvShow.setNextEpisodeLink(href.substring(href.lastIndexOf("/") + 1));
+        }
+        Previousepisode previousepisode = showResult.getLinks().getPreviousepisode();
+        if (previousepisode != null) {
+            String href = previousepisode.getHref();
+            tvShow.setLastEpisodeLink(href.substring(href.lastIndexOf("/") + 1));
+        }
+        //todo async get previous and next episode
+
+
+        return tvShow;
     }
 
     private interface Service {
@@ -115,5 +188,10 @@ public class SearchRequester {
 
         @GET("episodes/{number}")
         Call<Episode> episodeDetails(@Path("number") String num);
+
+        @GET("shows/{number}")
+        Call<ShowDetails> showDetails(@Path("number") String num);
     }
+
+
 }

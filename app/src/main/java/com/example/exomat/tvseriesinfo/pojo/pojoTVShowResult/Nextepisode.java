@@ -1,5 +1,5 @@
 
-package com.example.exomat.tvseriesinfo.pojo;
+package com.example.exomat.tvseriesinfo.pojo.pojoTVShowResult;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
 
-public class Previousepisode implements Serializable {
+public class Nextepisode implements Serializable {
 
     @SerializedName("href")
     @Expose

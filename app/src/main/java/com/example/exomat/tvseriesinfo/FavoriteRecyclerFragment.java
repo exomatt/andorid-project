@@ -2,6 +2,7 @@ package com.example.exomat.tvseriesinfo;
 
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +21,9 @@ import android.widget.TextView;
 import com.example.exomat.tvseriesinfo.dao.TVShowDao;
 import com.example.exomat.tvseriesinfo.database.AppDatabase;
 import com.example.exomat.tvseriesinfo.model.TVShow;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,7 +152,19 @@ public class FavoriteRecyclerFragment extends Fragment {
             final TVShowDao tvShowDao = appDatabase.tvShowDao();
             list.addAll(tvShowDao.getAll());
             if (list == null || list.isEmpty()) {
+                appDatabase.close();
                 return null;
+            }
+            for (TVShow tvShow : list) {
+                try {
+                    Bitmap bitmap = Picasso.with(getContext()).load(tvShow.getImgLink()).get();
+                    byte[] bytes = ImageUtils.getBytes(bitmap);
+                    tvShow.setImageByteArray(bytes);
+                    tvShowDao.update(tvShow);
+                    //todo save to db
+                } catch (IOException e) {
+                    Log.e("SDetActiv", "getNewTVShow: ", e);
+                }
             }
             Log.i("TVINFO", "w bazie " + list.get(0).toString());
             Log.d("test", "size of list: " + list.size());

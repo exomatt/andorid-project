@@ -13,9 +13,9 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.exomat.tvseriesinfo.model.TVShow;
-import com.example.exomat.tvseriesinfo.pojo.Nextepisode;
-import com.example.exomat.tvseriesinfo.pojo.Previousepisode;
-import com.example.exomat.tvseriesinfo.pojo.TvShowResult;
+import com.example.exomat.tvseriesinfo.pojo.pojoTVShowResult.Nextepisode;
+import com.example.exomat.tvseriesinfo.pojo.pojoTVShowResult.Previousepisode;
+import com.example.exomat.tvseriesinfo.pojo.pojoTVShowResult.TvShowResult;
 import com.example.exomat.tvseriesinfo.requester.SearchRequester;
 
 import java.util.ArrayList;
