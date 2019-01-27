@@ -30,6 +30,9 @@ public interface TVShowDao {
     @Query("Select * from tvshow where name = :n")
     TVShow findByName(String n);
 
+    @Query("Select * from tvshow where selfLink= :n")
+    TVShow findByUrl(String n);
+
     @Query("Select * from tvshow where nextEpisodeDate = :n")
     List<TVShow> findByDate(String n);
 }

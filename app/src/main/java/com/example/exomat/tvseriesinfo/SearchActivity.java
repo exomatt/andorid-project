@@ -83,7 +83,7 @@ public class SearchActivity extends AppCompatActivity {
         tvShow.setStatus(showResult.getShow().getStatus());
         tvShow.setPremiere(showResult.getShow().getPremiered());
         tvShow.setSummary(showResult.getShow().getSummary());
-        tvShow.setSelfLink(String.valueOf(showResult.getShow().getLinks().getSelf()));
+        tvShow.setSelfLink(String.valueOf(showResult.getShow().getLinks().getSelf().getHref()));
         tvShow.setImgLink(showResult.getShow().getImage().getMedium());
         Nextepisode nextepisode = showResult.getShow().getLinks().getNextepisode();
         if (nextepisode != null) {

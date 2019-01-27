@@ -1,7 +1,13 @@
 package com.example.exomat.tvseriesinfo;
 
 import android.arch.persistence.room.Room;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,21 +28,29 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
-public class ShowDetailsActivity extends AppCompatActivity {
+public class ShowDetailsActivity extends AppCompatActivity implements SensorEventListener {
     private boolean ifFavorite = false;
     private TVShow tvShowToSave = null;
     private TVShowDao tvShowDao;
-    private String tvShowName;
+    private String tvShowUrl;
     private TextView name;
     private TextView premiere;
     private TextView status;
     private TextView summary;
     private ImageView image;
     private ImageButton favoriteButton;
-
+    private SensorManager sensorManager;
+    private Sensor proximitySensor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PackageManager PM = this.getPackageManager();
+        boolean proximity = PM.hasSystemFeature(PackageManager.FEATURE_SENSOR_PROXIMITY);
+        if (proximity) {
+            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+            sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
         AppDatabase appDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database-tvshow").build();
         tvShowDao = appDatabase.tvShowDao();
         setContentView(R.layout.activity_show_details);
@@ -47,7 +61,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
         image = findViewById(R.id.imageTVView);
         favoriteButton = findViewById(R.id.favoriteButton);
         tvShowToSave = (TVShow) getIntent().getSerializableExtra("Show");
-        tvShowName = getIntent().getStringExtra("ShowName");
+        tvShowUrl = getIntent().getStringExtra("ShowUrl");
         summary.setMovementMethod(new ScrollingMovementMethod());
         new MyAsyncLoadData().execute();
     }
@@ -79,6 +93,44 @@ public class ShowDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Sensor sensor = event.sensor;
+        if (sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            float value = event.values[0];
+            if (sensor.getMaximumRange() > value) {
+                if (!ifFavorite) {
+                    addToDB();
+                } else {
+                    deleteFromDB();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        if (sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            Log.e("SenTag", "Proximity accurancy change" + accuracy);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sensorManager != null) {
+            sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
     public class MyAsyncLoadData extends AsyncTask<Void, Void, String> {
         public AsyncResponse delegate = null;
 
@@ -86,9 +138,9 @@ public class ShowDetailsActivity extends AppCompatActivity {
         protected String doInBackground(Void... voids) {
             TVShow byName;
             if (tvShowToSave == null) {
-                byName = tvShowDao.findByName(tvShowName);
+                byName = tvShowDao.findByUrl(tvShowUrl);
             } else {
-                byName = tvShowDao.findByName(tvShowToSave.getName());
+                byName = tvShowDao.findByUrl(tvShowToSave.getSelfLink());
             }
             if (byName != null) {
                 tvShowToSave = byName;
@@ -121,38 +173,47 @@ public class ShowDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (!ifFavorite) {
-                        ifFavorite = true;
-                        favoriteButton.setBackgroundResource(R.drawable.likefull);
-                        AsyncTask.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                Long insert = tvShowDao.insert(tvShowToSave);
-                                tvShowToSave.setId(insert);
-                                getImageToDB(tvShowToSave);
-                                if (tvShowToSave.getLastEpisodeLink() != null) {
-                                    SearchRequester.fillEpisodes(tvShowToSave.getLastEpisodeLink(), tvShowToSave, false, getApplicationContext());
-                                }
-                                if (tvShowToSave.getNextEpisodeLink() != null) {
-                                    SearchRequester.fillEpisodes(tvShowToSave.getNextEpisodeLink(), tvShowToSave, true, getApplicationContext());
-                                }
-                                //todo need to check
-                            }
-                        });
-                        Toast.makeText(ShowDetailsActivity.this, "Tv Series add to favorite :)", Toast.LENGTH_SHORT).show();
+
+                        addToDB();
                     } else {
-                        ifFavorite = false;
-                        AsyncTask.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                tvShowDao.delete(tvShowToSave);
-                            }
-                        });
-                        favoriteButton.setBackgroundResource(R.drawable.likeempty);
-                        Toast.makeText(ShowDetailsActivity.this, "Tv Series remove from favorite :)", Toast.LENGTH_SHORT).show();
+                        deleteFromDB();
                     }
                 }
             });
         }
+    }
+
+    private void deleteFromDB() {
+        ifFavorite = false;
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                tvShowDao.delete(tvShowToSave);
+            }
+        });
+        favoriteButton.setBackgroundResource(R.drawable.likeempty);
+        Toast.makeText(ShowDetailsActivity.this, "Tv Series remove from favorite :)", Toast.LENGTH_SHORT).show();
+    }
+
+    private void addToDB() {
+        ifFavorite = true;
+        favoriteButton.setBackgroundResource(R.drawable.likefull);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Long insert = tvShowDao.insert(tvShowToSave);
+                tvShowToSave.setId(insert);
+                getImageToDB(tvShowToSave);
+                if (tvShowToSave.getLastEpisodeLink() != null) {
+                    SearchRequester.fillEpisodes(tvShowToSave.getLastEpisodeLink(), tvShowToSave, false, getApplicationContext());
+                }
+                if (tvShowToSave.getNextEpisodeLink() != null) {
+                    SearchRequester.fillEpisodes(tvShowToSave.getNextEpisodeLink(), tvShowToSave, true, getApplicationContext());
+                }
+                //todo need to check
+            }
+        });
+        Toast.makeText(ShowDetailsActivity.this, "Tv Series add to favorite :)", Toast.LENGTH_SHORT).show();
     }
 
 

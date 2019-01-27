@@ -106,12 +106,12 @@ public class FavoriteRecyclerFragment extends Fragment {
             recyclerViewHolder.mTextViewName.setText(tvShow.getName());
             recyclerViewHolder.mTextViewDate.setText(tvShow.getPremiere());
             recyclerViewHolder.mTextViewStatus.setText(tvShow.getStatus());
-            final String name = tvShow.getName();
+            final String url = tvShow.getSelfLink();
             recyclerViewHolder.mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), ShowDetailsActivity.class);
-                    intent.putExtra("ShowName", name);
+                    intent.putExtra("ShowUrl", url);
                     getActivity().startActivity(intent);
                 }
             });

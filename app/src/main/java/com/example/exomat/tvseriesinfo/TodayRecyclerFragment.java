@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import lombok.Data;
+import lombok.Setter;
 
 public class TodayRecyclerFragment extends Fragment implements AsyncResponse {
     List<TVShow> list;
@@ -120,9 +120,9 @@ public class TodayRecyclerFragment extends Fragment implements AsyncResponse {
             recyclerViewHolder.mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), ShowDetailsActivity.class);
-                    intent.putExtra("ShowName", name);
-                    getActivity().startActivity(intent);
+                    Intent intent = new Intent(getContext(), EpisodeActivity.class);
+                    intent.putExtra("ShowUrl", tvShow.getSelfLink());
+                    startActivity(intent);
                 }
             });
             String nextEpisode = tvShow.getNextEpisodeDate();
@@ -145,12 +145,10 @@ public class TodayRecyclerFragment extends Fragment implements AsyncResponse {
     }
 
     private void onCardClickMethod(TVShow tvShow) {
-        Intent intent = new Intent(getContext(), ShowDetailsActivity.class);
-        intent.putExtra("Show", tvShow);
-        startActivity(intent);
+
     }
 
-    @Data
+    @Setter
     public class MyAsyncTask extends AsyncTask<Void, Void, String> {
         private AsyncResponse delegate = null;
 
