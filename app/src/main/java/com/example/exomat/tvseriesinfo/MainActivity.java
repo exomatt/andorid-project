@@ -1,6 +1,9 @@
 package com.example.exomat.tvseriesinfo;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import com.example.exomat.tvseriesinfo.database.AppDatabase;
 import com.example.exomat.tvseriesinfo.model.TVShow;
 import com.example.exomat.tvseriesinfo.requester.SearchRequester;
 
+import java.util.Calendar;
 import java.util.List;
 
 import lombok.Setter;
@@ -27,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 2);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * 60, pendingIntent);
 
         CardView searchCard = findViewById(R.id.searchCard);
         searchCard.setOnClickListener(new View.OnClickListener() {

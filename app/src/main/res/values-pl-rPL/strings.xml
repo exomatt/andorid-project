@@ -21,4 +21,6 @@
     <string name="credits">Podziękowania:</string>
     <string name="some_icons_made_by_from_flaticon_https_www_flaticon_com_licensed_by_http_creativecommons_org_licenses_by_3_0_creative_commons_by_3_0">Niektóre ikony pobrane z  Flaticon https://www.flaticon.com na licencji http://creativecommons.org/licenses/by/3.0/ Creative Commons BY 3.0</string>
     <string name="tvshow_info_get_from">Informacje o serialach pobrane z  https://www.tvmaze.com/api na bazie licencji https://creativecommons.org/licenses/by-sa/4.0/</string>
+    <string name="notification_content">Sprawdź co nowego w świecie seriali.</string>
+    <string name="notification_newShow">TV Show Info Przypominajka!</string>
 </resources>

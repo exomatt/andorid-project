@@ -20,4 +20,6 @@
     <string name="credits">Credits:</string>
     <string name="some_icons_made_by_from_flaticon_https_www_flaticon_com_licensed_by_http_creativecommons_org_licenses_by_3_0_creative_commons_by_3_0">Some icons from Flaticon https://www.flaticon.com licensed by http://creativecommons.org/licenses/by/3.0/ Creative Commons BY 3.0</string>
     <string name="tvshow_info_get_from">TVShow info get from https://www.tvmaze.com/api on licenses https://creativecommons.org/licenses/by-sa/4.0/</string>
+    <string name="notification_content">Check what new in TV world.</string>
+    <string name="notification_newShow">New TV Show Info Alert!</string>
 </resources>
