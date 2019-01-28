@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.exomat.tvseriesinfo.ListSearchAdapter;
+import com.example.exomat.tvseriesinfo.R;
 import com.example.exomat.tvseriesinfo.dao.TVShowDao;
 import com.example.exomat.tvseriesinfo.database.AppDatabase;
 import com.example.exomat.tvseriesinfo.model.TVShow;
@@ -64,11 +65,11 @@ public class SearchRequester {
                         = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
                 if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                    Toast.makeText(context, "Probably you don't connect to the Net :(  :(", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getApplicationContext().getString(R.string.net_problem), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Log.e("Error tag", "failure " + t.toString());
-                Toast.makeText(context, "Some problem with search that TV SHOW :(", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getApplicationContext().getString(R.string.net_other_problems), Toast.LENGTH_SHORT).show();
             }
         });
         Log.e("tag", "searchRequest: finish ");

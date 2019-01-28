@@ -24,4 +24,6 @@
     <string name="notification_content">Sprawdź co nowego w świecie seriali.</string>
     <string name="notification_newShow">TV Show Info Przypominajka!</string>
     <string name="contenttittlenotification">TV Show Info</string>
+    <string name="net_problem">"Chyba nie masz połączenia z internetem :c "</string>
+    <string name="net_other_problems">Chyba nie masz połączenia z internetem albo jakieś inne problemy :(</string>
 </resources>

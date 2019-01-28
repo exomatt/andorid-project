@@ -23,4 +23,6 @@
     <string name="notification_content">Check what new in TV world.</string>
     <string name="notification_newShow">New TV Show Info Alert!</string>
     <string name="contenttittlenotification">TV Show Info</string>
+    <string name="net_problem">Probably you don\'t connect to the Net :(  :(</string>
+    <string name="net_other_problems">Probably you don\'t connect to the Net or some other problems :(</string>
 </resources>

@@ -99,28 +99,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Setter
-    private class MyAsyncTaskUpdateImage extends AsyncTask<Void, Void, String> {
-        @Override
-        protected String doInBackground(Void... voids) {
-            appDatabase = Room.databaseBuilder(getBaseContext(), AppDatabase.class, "database-tvshow").build();
-            TVShowDao tvShowDao = appDatabase.tvShowDao();
-            shows = tvShowDao.getAll();
-            appDatabase.close();
-            if (shows == null) {
-                return null;
-            }
-            for (TVShow show : shows) {
-                String path = show.getSelfLink().substring(show.getSelfLink().lastIndexOf("/") + 1).replace("]", "");
-                SearchRequester.updateShowInDB(path, show, getApplicationContext());
-            }
-            Log.i(MAIN_TAG, SUCCESSFULLY_LOAD_SHOWS);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-        }
-    }
 }
