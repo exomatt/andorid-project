@@ -52,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        CardView settingsCard = findViewById(R.id.settingsCard);
+        settingsCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
         new MyAsyncTaskUpdateDB().execute();
     }
 
