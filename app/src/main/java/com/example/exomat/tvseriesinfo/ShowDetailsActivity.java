@@ -8,6 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -170,9 +171,11 @@ public class ShowDetailsActivity extends AppCompatActivity implements SensorEven
             status.setText(tvShowToSave.getStatus());
             summary.setText(tvShowToSave.getSummary().replaceAll("(<[^>]+>)", ""));
             summary.setMovementMethod(new ScrollingMovementMethod());
+            final MediaPlayer mediaPlayer = MediaPlayer.create(ShowDetailsActivity.this, R.raw.buttonsound);
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mediaPlayer.start();
                     if (!ifFavorite) {
 
                         addToDB();
