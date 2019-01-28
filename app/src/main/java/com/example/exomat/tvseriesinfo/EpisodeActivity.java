@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ public class EpisodeActivity extends AppCompatActivity implements AsyncResponse 
         tvShowDao = appDatabase.tvShowDao();
         premiere = findViewById(R.id.premiereTextEpisode);
         summary = findViewById(R.id.showSummaryTextEpisode);
+        summary.setMovementMethod(new ScrollingMovementMethod());
         info = findViewById(R.id.textTittleEpisode);
         number = findViewById(R.id.textNumberEpisode);
         name = findViewById(R.id.tvShowNameTextEpisode);
@@ -62,14 +64,14 @@ public class EpisodeActivity extends AppCompatActivity implements AsyncResponse 
         @Override
         protected void onPostExecute(String result) {
             if (tvShow == null) {
-                delegate.processFinish("Problem to load tvshow from database");
+                delegate.processFinish(getString(R.string.DBLoadProblem));
                 return;
             }
             name.setText(tvShow.getName());
             premiere.setText(tvShow.getPremiere());
             summary.setText(tvShow.getNextEpisodeSummary().replaceAll("(<[^>]+>)", ""));
-            number.setText("Number:  " + tvShow.getNextEpisodeSE());
-            info.setText("Tittle:  " + tvShow.getNextEpisodeName());
+            number.setText(getString(R.string.EpisodeNumber) + tvShow.getNextEpisodeSE());
+            info.setText(getString(R.string.EpisodeTittle) + tvShow.getNextEpisodeName());
             if (tvShow.getImageByteArray() != null) {
                 image.setImageBitmap(ImageUtils.getImage(tvShow.getImageByteArray()));
             } else {

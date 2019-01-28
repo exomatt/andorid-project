@@ -19,7 +19,8 @@
         app:layout_constraintHorizontal_bias="0.59"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/tvshowicon" />
+        app:srcCompat="@drawable/tvshowicon"
+        android:contentDescription="@string/tvShow_poster" />
 
     <LinearLayout
         android:id="@+id/linearLayoutEpisode"
@@ -70,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="Number:"
+            android:text="@string/EpisodeNumber"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="Tittle:"
+            android:text="@string/EpisodeTittle"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="8dp"
@@ -91,7 +92,7 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Summary:"
+            android:text="@string/summary"
             android:layout_marginBottom="4dp"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -100,10 +101,7 @@
             android:id="@+id/showSummaryTextEpisode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoSizeMaxTextSize="18sp"
-            android:autoSizeMinTextSize="12sp"
-            android:autoSizeTextType="uniform"
-            android:textSize="18sp"
+            android:textSize="17sp"
             tools:layout_editor_absoluteX="219dp"
             tools:layout_editor_absoluteY="437dp" />
     </LinearLayout>

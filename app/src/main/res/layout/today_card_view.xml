@@ -22,7 +22,8 @@
             app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/tvshowicon" />
+            app:srcCompat="@drawable/tvshowicon"
+            android:contentDescription="@string/tvShow_poster" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -52,7 +53,7 @@
                 android:id="@+id/textView2Today"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Episode:"
+                android:text="@string/EpisodeNumber"
                 android:textSize="16sp" />
 
             <TextView

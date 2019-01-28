@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.exomat.tvseriesinfo.model.TVShow;
@@ -57,14 +56,6 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 confirmHandler(searchText, context);
-            }
-        });
-        final ImageButton searchButton = findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmHandler(searchText, context);
-
             }
         });
     }

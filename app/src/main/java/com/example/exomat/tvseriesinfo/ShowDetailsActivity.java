@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 
 public class ShowDetailsActivity extends AppCompatActivity implements SensorEventListener {
+    public static final String S_DET_ACTIV = "SDetActiv";
     private boolean ifFavorite = false;
     private TVShow tvShowToSave = null;
     private TVShowDao tvShowDao;
@@ -89,7 +90,7 @@ public class ShowDetailsActivity extends AppCompatActivity implements SensorEven
             tvShowDao.update(tvShow);
             //todo save to db
         } catch (IOException e) {
-            Log.e("SDetActiv", "getNewTVShow: ", e);
+            Log.e(S_DET_ACTIV, "getNewTVShow image problem: ", e);
         }
     }
 
@@ -111,7 +112,7 @@ public class ShowDetailsActivity extends AppCompatActivity implements SensorEven
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         if (sensor.getType() == Sensor.TYPE_PROXIMITY) {
-            Log.e("SenTag", "Proximity accurancy change" + accuracy);
+            Log.e(S_DET_ACTIV, "Proximity accuracy change" + accuracy);
         }
     }
 
@@ -155,7 +156,7 @@ public class ShowDetailsActivity extends AppCompatActivity implements SensorEven
                 ifFavorite = true;
                 favoriteButton.setBackgroundResource(R.drawable.likefull);
             }
-            Log.i("SDAI", "TVShow to display: " + tvShowToSave.toString());
+            Log.i(S_DET_ACTIV, "TVShow to display: " + tvShowToSave.toString());
             String originalImagePath = tvShowToSave.getImgLink();
             if (tvShowToSave.getImageByteArray() != null) {
                 image.setImageBitmap(ImageUtils.getImage(tvShowToSave.getImageByteArray()));
@@ -192,7 +193,7 @@ public class ShowDetailsActivity extends AppCompatActivity implements SensorEven
             }
         });
         favoriteButton.setBackgroundResource(R.drawable.likeempty);
-        Toast.makeText(ShowDetailsActivity.this, "Tv Series remove from favorite :)", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ShowDetailsActivity.this, getString(R.string.remove_favorite), Toast.LENGTH_SHORT).show();
     }
 
     private void addToDB() {
@@ -213,7 +214,7 @@ public class ShowDetailsActivity extends AppCompatActivity implements SensorEven
                 //todo need to check
             }
         });
-        Toast.makeText(ShowDetailsActivity.this, "Tv Series add to favorite :)", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ShowDetailsActivity.this, getString(R.string.add_favorite), Toast.LENGTH_SHORT).show();
     }
 
 

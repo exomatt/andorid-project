@@ -30,6 +30,7 @@ import java.util.List;
 import lombok.Setter;
 
 public class TodayRecyclerFragment extends Fragment implements AsyncResponse {
+    public static final String TODAY_ACT = "TodayAct";
     List<TVShow> list;
     RecyclerView recyclerView;
     RecyclerViewAdapter adapter;
@@ -98,16 +99,6 @@ public class TodayRecyclerFragment extends Fragment implements AsyncResponse {
         @Override
         public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-
-            //            viewGroup.setOnClickListener(new View.OnClickListener() {
-
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(getContext(), ShowDetailsActivity.class);
-//                    intent.putExtra("Show", currentItem);
-//                    startActivity(intent);
-//                }
-//            });
             return new RecyclerViewHolder(inflater, viewGroup);
         }
 
@@ -130,10 +121,8 @@ public class TodayRecyclerFragment extends Fragment implements AsyncResponse {
                 recyclerViewHolder.mTextViewEpisode.setText(tvShow.getNextEpisodeName() + " " + tvShow.getNextEpisodeSE() + " " + nextEpisode);
             }
             if (tvShow.getImageByteArray() != null) {
-//                Picasso.with(getContext()).
                 recyclerViewHolder.mImageView.setImageBitmap(ImageUtils.getImage(tvShow.getImageByteArray()));
             }
-//            recyclerViewHolder.mImageView.setImageDrawable(getResources().getDrawable(mList.get(i).));
         }
 
 
@@ -144,30 +133,27 @@ public class TodayRecyclerFragment extends Fragment implements AsyncResponse {
 
     }
 
-    private void onCardClickMethod(TVShow tvShow) {
-
-    }
-
     @Setter
     public class MyAsyncTask extends AsyncTask<Void, Void, String> {
+        public static final String YYYY_MM_DD = "YYYY-MM-DD";
         private AsyncResponse delegate = null;
 
         @Override
         protected String doInBackground(Void... voids) {
             AppDatabase appDatabase = Room.databaseBuilder(getContext(), AppDatabase.class, "database-tvshow").build();
             Date today = new Date();
-            String date = new SimpleDateFormat("YYYY-MM-DD").format(today);
+            String date = new SimpleDateFormat(YYYY_MM_DD).format(today);
             final TVShowDao tvShowDao = appDatabase.tvShowDao();
             List<TVShow> allShows = tvShowDao.findByDate(date);
             list.addAll(allShows);
             if (list == null || list.isEmpty()) {
-                return "Today nothing new :(";
+                return getString(R.string.nothin_new);
             }
-            Log.i("TEST", "doInBackground:  " + date);
-            Log.i("TVINFO", "w bazie " + list.get(0).toString());
-            Log.d("test", "size of list: " + list.size());
+            Log.i(TODAY_ACT, "doInBackground:  " + date);
+            Log.i(TODAY_ACT, "w bazie " + list.get(0).toString());
+            Log.d(TODAY_ACT, "size of list: " + list.size());
             appDatabase.close();
-            return "Successfully load Shows :)";
+            return getString(R.string.something_new);
         }
 
         @Override

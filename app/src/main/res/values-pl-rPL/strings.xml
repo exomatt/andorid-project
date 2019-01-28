@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TV Series Info</string>
+    <string name="DBLoadProblem">Problem z załadowaniem danych z bazy</string>
+    <string name="EpisodeNumber">Odcinek:</string>
+    <string name="EpisodeTittle">Tytuł:</string>
+    <string name="FavoriteEmpty">Ooooo jeszcze nie masz ulubionych seriali :(</string>
+    <string name="FavoriteSuccess">Załadowano seriale :)</string>
+    <string name="remove_favorite">"Usunięto serial z ulubionych "</string>
+    <string name="add_favorite">Dodano serial do ulubionych</string>
+    <string name="nothin_new">Dzisiaj nic nowego :(</string>
+    <string name="something_new">Załadowano dzisiejsze seriale :)</string>
+    <string name="summary">Opis:</string>
+    <string name="tvShow_poster">TVShow poster</string>
+    <string name="today">Dzisiaj</string>
+    <string name="settings">Ustawienia</string>
+    <string name="search">Wyszukaj</string>
+    <string name="favorite">Ulubione</string>
+    <string name="status">Status</string>
+    <string name="lastepisode">Ostatni odcinek:</string>
+</resources>

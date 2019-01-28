@@ -20,7 +20,8 @@
         app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/tvshowicon" />
+        app:srcCompat="@drawable/tvshowicon"
+        android:contentDescription="@string/tvShow_poster" />
 
     <TextView
         android:id="@+id/summaryText"
@@ -29,7 +30,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="88dp"
         android:layout_marginBottom="8dp"
-        android:text="Summary"
+        android:text="@string/summary"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/showSummaryText"
@@ -44,9 +45,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="8dp"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeMaxTextSize="18sp"
+        android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +69,6 @@
             android:id="@+id/tvShowNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:textSize="24sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="193dp"
@@ -80,7 +78,6 @@
             android:id="@+id/premiereText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:textSize="18sp"
             tools:layout_editor_absoluteX="192dp"
             tools:layout_editor_absoluteY="44dp" />
@@ -89,7 +86,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Status"
+            android:text="@string/status"
             tools:layout_editor_absoluteX="192dp"
             tools:layout_editor_absoluteY="78dp" />
 

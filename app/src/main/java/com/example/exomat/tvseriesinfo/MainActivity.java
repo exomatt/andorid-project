@@ -19,6 +19,8 @@ import java.util.List;
 import lombok.Setter;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String MAIN_TAG = "MainTag";
+    public static final String SUCCESSFULLY_LOAD_SHOWS = "Successfully load Shows :)";
     private AppDatabase appDatabase;
     private List<TVShow> shows;
     @Override
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 String path = show.getSelfLink().substring(show.getSelfLink().lastIndexOf("/") + 1).replace("]", "");
                 SearchRequester.updateShowInDB(path, show, getApplicationContext());
             }
-            Log.i("MainTag", "Successfully load Shows :)");
+            Log.i(MAIN_TAG, SUCCESSFULLY_LOAD_SHOWS);
             return null;
         }
 
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 String path = show.getSelfLink().substring(show.getSelfLink().lastIndexOf("/") + 1).replace("]", "");
                 SearchRequester.updateShowInDB(path, show, getApplicationContext());
             }
-            Log.i("MainTag", "Successfully load Shows :)");
+            Log.i(MAIN_TAG, SUCCESSFULLY_LOAD_SHOWS);
             return null;
         }
 

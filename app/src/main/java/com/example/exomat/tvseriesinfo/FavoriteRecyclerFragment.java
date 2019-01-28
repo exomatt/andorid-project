@@ -152,6 +152,7 @@ public class FavoriteRecyclerFragment extends Fragment implements AsyncResponse 
 
     @Setter
     public class MyAsyncTask extends AsyncTask<Void, Void, String> {
+        public static final String FV_ACTIV = "FvActiv";
         public AsyncResponse delegate = null;
 
         @Override
@@ -161,7 +162,7 @@ public class FavoriteRecyclerFragment extends Fragment implements AsyncResponse 
             list.addAll(tvShowDao.getAll());
             if (list == null || list.isEmpty()) {
                 appDatabase.close();
-                return "Ooooo empty favorites :(";
+                return getString(R.string.FavoriteEmpty);
             }
             for (TVShow tvShow : list) {
                 try {
@@ -171,13 +172,13 @@ public class FavoriteRecyclerFragment extends Fragment implements AsyncResponse 
                     tvShowDao.update(tvShow);
                     //todo save to db
                 } catch (IOException e) {
-                    Log.e("SDetActiv", "getNewTVShow: ", e);
+                    Log.e(FV_ACTIV, "getNewTVShow: ", e);
                 }
             }
-            Log.i("TVINFO", "w bazie " + list.get(0).toString());
-            Log.d("test", "size of list: " + list.size());
+            Log.i(FV_ACTIV, "in base  " + list.get(0).toString());
+            Log.d(FV_ACTIV, "size of list: " + list.size());
             appDatabase.close();
-            return "Successfully load TVShows :)";
+            return getString(R.string.FavoriteSuccess);
         }
 
         @Override
