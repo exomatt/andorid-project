@@ -86,9 +86,6 @@ public class SearchActivity extends AppCompatActivity {
             String href = previousepisode.getHref();
             tvShow.setLastEpisodeLink(href.substring(href.lastIndexOf("/") + 1));
         }
-        //todo async get previous and next episode
-
-
         return tvShow;
     }
 }

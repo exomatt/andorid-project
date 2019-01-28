@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         calendar.add(Calendar.MINUTE, 2);
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * 60, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * 10, pendingIntent);
 
         CardView searchCard = findViewById(R.id.searchCard);
         searchCard.setOnClickListener(new View.OnClickListener() {

@@ -23,4 +23,5 @@
     <string name="tvshow_info_get_from">Informacje o serialach pobrane z  https://www.tvmaze.com/api na bazie licencji https://creativecommons.org/licenses/by-sa/4.0/</string>
     <string name="notification_content">Sprawdź co nowego w świecie seriali.</string>
     <string name="notification_newShow">TV Show Info Przypominajka!</string>
+    <string name="contenttittlenotification">TV Show Info</string>
 </resources>

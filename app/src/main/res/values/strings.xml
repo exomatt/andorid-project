@@ -22,4 +22,5 @@
     <string name="tvshow_info_get_from">TVShow info get from https://www.tvmaze.com/api on licenses https://creativecommons.org/licenses/by-sa/4.0/</string>
     <string name="notification_content">Check what new in TV world.</string>
     <string name="notification_newShow">New TV Show Info Alert!</string>
+    <string name="contenttittlenotification">TV Show Info</string>
 </resources>

@@ -97,16 +97,6 @@ public class FavoriteRecyclerFragment extends Fragment implements AsyncResponse 
         @Override
         public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-
-            //            viewGroup.setOnClickListener(new View.OnClickListener() {
-
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(getContext(), ShowDetailsActivity.class);
-//                    intent.putExtra("Show", currentItem);
-//                    startActivity(intent);
-//                }
-//            });
             return new RecyclerViewHolder(inflater, viewGroup);
         }
 
@@ -130,10 +120,8 @@ public class FavoriteRecyclerFragment extends Fragment implements AsyncResponse 
                 recyclerViewHolder.mTextViewEpisode.setText(tvShow.getLastEpisodeName() + " " + tvShow.getLastEpisodeSE() + " " + lastEpisode);
             }
             if (tvShow.getImageByteArray() != null) {
-//                Picasso.with(getContext()).
                 recyclerViewHolder.mImageView.setImageBitmap(ImageUtils.getImage(tvShow.getImageByteArray()));
             }
-//            recyclerViewHolder.mImageView.setImageDrawable(getResources().getDrawable(mList.get(i).));
         }
 
 
